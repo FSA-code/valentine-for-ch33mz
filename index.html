@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A Very Important Question 💌</title>
+<title>A Very Important Question 💌 - Mini Surprise Edition</title>
 
 <style>
 body {
@@ -43,13 +43,7 @@ button {
 .maybe { background: #ffd6a5; }
 .yes { background: #ff99cc; }
 
-.tap-btn {
-    position: relative;
-    margin-top: 20px;
-    background: #ff99cc;
-}
-
-.replay {
+.tap-btn, .mini-btn, .replay {
     position: relative;
     margin-top: 20px;
     background: #ff99cc;
@@ -78,7 +72,7 @@ button {
     to { transform: scale(2); opacity: 0; }
 }
 
-.easter-egg {
+.easter-egg, .mini-surprise {
     margin-top: 20px;
     font-size: 14px;
     color: #b30059;
@@ -104,11 +98,16 @@ button {
     <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_2c7c5b4c41.mp3" type="audio/mpeg">
 </audio>
 
+<audio id="miniSound" preload="auto">
+    <source src="https://cdn.pixabay.com/audio/2023/01/28/audio_c6d1f6b9bb.mp3" type="audio/mpeg">
+</audio>
+
 <script>
 const card = document.getElementById("card");
 const noBtn = document.getElementById("noBtn");
 const maybeBtn = document.getElementById("maybeBtn");
 const loveSound = document.getElementById("loveSound");
+const miniSound = document.getElementById("miniSound");
 
 let maybeBounces = 0;
 let yesBounces = 0;
@@ -177,29 +176,48 @@ function pageThree() {
             to share it with and whom I am excited to share this with!<br><br>
             I love you so so much <strong>Chimwemwe Hami!</strong> 💖
             <br><br>
+            <button class="mini-btn" id="miniBtn">💖 Secret Mini Gift 💖</button>
+            <br><br>
+            <button class="replay" onclick="location.reload()">Replay 🔁</button>
+        </div>
+
+        <div class="mini-surprise" id="miniSurprise">
+            🎉 Surprise! You found my secret mini gift 💕<br><br>
             <button class="replay" onclick="location.reload()">Replay 🔁</button>
         </div>
     `;
 
     const tapBtn = document.getElementById("tapBtn");
     const secret = document.getElementById("secret");
+    const miniBtn = document.getElementById("miniBtn");
+    const miniSurprise = document.getElementById("miniSurprise");
 
     tapBtn.addEventListener("click", () => {
         tapBtn.style.display = "none";
         secret.classList.add("show");
 
-        // 🔊 Sound
+        // Main sound & vibration
         loveSound.currentTime = 0;
         loveSound.play().catch(() => {});
+        if (navigator.vibrate) navigator.vibrate([200,100,200]);
 
-        // 📳 Vibration
-        if (navigator.vibrate) {
-            navigator.vibrate([200, 100, 200]);
-        }
-
-        // ✨ Sparkles
         const rect = secret.getBoundingClientRect();
-        createSparkles(rect.left + rect.width / 2, rect.top);
+        createSparkles(rect.left + rect.width/2, rect.top);
+    });
+
+    let miniClicks = 0;
+    miniBtn.addEventListener("click", () => {
+        miniClicks++;
+        if (miniClicks >= 3) {
+            miniSurprise.classList.add("show");
+
+            miniSound.currentTime = 0;
+            miniSound.play().catch(() => {});
+            if (navigator.vibrate) navigator.vibrate([100,50,100,50,100]);
+
+            const rect = miniSurprise.getBoundingClientRect();
+            createSparkles(rect.left + rect.width/2, rect.top);
+        }
     });
 }
 
