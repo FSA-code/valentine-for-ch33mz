@@ -43,7 +43,7 @@ button {
 .maybe { background: #ffd6a5; }
 .yes { background: #ff99cc; }
 
-.tap-btn, .mini-btn, .replay {
+.tap-btn, .replay {
     position: relative;
     margin-top: 20px;
     background: #ff99cc;
@@ -82,6 +82,15 @@ button {
 
 .show {
     opacity: 1;
+}
+
+#miniCorner {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    user-select: none;
 }
 </style>
 </head>
@@ -176,8 +185,6 @@ function pageThree() {
             to share it with and whom I am excited to share this with!<br><br>
             I love you so so much <strong>Chimwemwe Hami!</strong> 💖
             <br><br>
-            <button class="mini-btn" id="miniBtn">💖 Secret Mini Gift 💖</button>
-            <br><br>
             <button class="replay" onclick="location.reload()">Replay 🔁</button>
         </div>
 
@@ -185,18 +192,20 @@ function pageThree() {
             🎉 Surprise! You found my secret mini gift 💕<br><br>
             <button class="replay" onclick="location.reload()">Replay 🔁</button>
         </div>
+
+        <div id="miniCorner">💖</div>
     `;
 
     const tapBtn = document.getElementById("tapBtn");
     const secret = document.getElementById("secret");
-    const miniBtn = document.getElementById("miniBtn");
+    const miniCorner = document.getElementById("miniCorner");
     const miniSurprise = document.getElementById("miniSurprise");
 
+    // Easter egg
     tapBtn.addEventListener("click", () => {
         tapBtn.style.display = "none";
         secret.classList.add("show");
 
-        // Main sound & vibration
         loveSound.currentTime = 0;
         loveSound.play().catch(() => {});
         if (navigator.vibrate) navigator.vibrate([200,100,200]);
@@ -205,8 +214,9 @@ function pageThree() {
         createSparkles(rect.left + rect.width/2, rect.top);
     });
 
+    // Hidden corner mini surprise
     let miniClicks = 0;
-    miniBtn.addEventListener("click", () => {
+    miniCorner.addEventListener("click", () => {
         miniClicks++;
         if (miniClicks >= 3) {
             miniSurprise.classList.add("show");
