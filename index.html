@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A Very Important Question 💌 - Mini Surprise Edition</title>
+<title>Valentine Mini Surprise 💌</title>
 
 <style>
 body {
@@ -42,12 +42,7 @@ button {
 .no { background: #ffb3b3; }
 .maybe { background: #ffd6a5; }
 .yes { background: #ff99cc; }
-
-.tap-btn, .replay {
-    position: relative;
-    margin-top: 20px;
-    background: #ff99cc;
-}
+.tap-btn, .replay { background: #ff99cc; }
 
 .heart {
     position: absolute;
@@ -55,11 +50,14 @@ button {
     animation: float 5s linear forwards;
 }
 
-.sparkle {
+.confetti {
     position: absolute;
-    font-size: 16px;
-    animation: sparkle 1.5s ease-out forwards;
-    pointer-events: none;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    opacity: 0.9;
+    border-radius: 50%;
+    animation: confetti-fall 2s ease-out forwards;
 }
 
 @keyframes float {
@@ -67,9 +65,9 @@ button {
     to { transform: translateY(-600px); opacity: 0; }
 }
 
-@keyframes sparkle {
-    from { transform: scale(0); opacity: 1; }
-    to { transform: scale(2); opacity: 0; }
+@keyframes confetti-fall {
+    0% { transform: translate(0,0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(var(--x), var(--y)) rotate(720deg); opacity: 0; }
 }
 
 .easter-egg, .mini-surprise {
@@ -144,9 +142,7 @@ function pageTwo() {
         <h1>I know, I play too much 😉</h1>
         <button class="yes" id="yesBtn" style="top: 320px; left: 140px;">YES ❤️</button>
     `;
-
     const yesBtn = document.getElementById("yesBtn");
-
     yesBtn.onclick = () => {
         if (yesBounces < 2) {
             randomPosition(yesBtn);
@@ -157,15 +153,29 @@ function pageTwo() {
     };
 }
 
-function createSparkles(x, y) {
-    for (let i = 0; i < 10; i++) {
-        const sparkle = document.createElement("div");
-        sparkle.className = "sparkle";
-        sparkle.innerText = "✨";
-        sparkle.style.left = x + Math.random() * 60 - 30 + "px";
-        sparkle.style.top = y + Math.random() * 60 - 30 + "px";
-        document.body.appendChild(sparkle);
-        setTimeout(() => sparkle.remove(), 1500);
+function createFloatingHearts() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "❤️";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.bottom = "0px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 5000);
+}
+setInterval(createFloatingHearts, 500);
+
+function createConfetti(x, y) {
+    const colors = ["#ff4d6d","#ffb84d","#ffd24d","#4dff88","#4da6ff"];
+    for(let i=0;i<30;i++){
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+        c.style.left = x + "px";
+        c.style.top = y + "px";
+        c.style.setProperty('--x', (Math.random()*200-100) + 'px');
+        c.style.setProperty('--y', (Math.random()*200-100) + 'px');
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(),2000);
     }
 }
 
@@ -189,7 +199,7 @@ function pageThree() {
         </div>
 
         <div class="mini-surprise" id="miniSurprise">
-            🎉 Surprise! You found my secret mini gift 💕<br><br>
+            🎉 Valentine's Gift Hint: You'll float too...' 💕<br><br>
             <button class="replay" onclick="location.reload()">Replay 🔁</button>
         </div>
 
@@ -205,42 +215,25 @@ function pageThree() {
     tapBtn.addEventListener("click", () => {
         tapBtn.style.display = "none";
         secret.classList.add("show");
-
-        loveSound.currentTime = 0;
-        loveSound.play().catch(() => {});
-        if (navigator.vibrate) navigator.vibrate([200,100,200]);
-
+        loveSound.currentTime = 0; loveSound.play().catch(()=>{});
+        if(navigator.vibrate) navigator.vibrate([200,100,200]);
         const rect = secret.getBoundingClientRect();
-        createSparkles(rect.left + rect.width/2, rect.top);
+        createConfetti(rect.left+rect.width/2, rect.top);
     });
 
-    // Hidden corner mini surprise
+    // Hidden mini surprise
     let miniClicks = 0;
     miniCorner.addEventListener("click", () => {
         miniClicks++;
-        if (miniClicks >= 3) {
+        if(miniClicks>=3){
             miniSurprise.classList.add("show");
-
-            miniSound.currentTime = 0;
-            miniSound.play().catch(() => {});
-            if (navigator.vibrate) navigator.vibrate([100,50,100,50,100]);
-
+            miniSound.currentTime=0; miniSound.play().catch(()=>{});
+            if(navigator.vibrate) navigator.vibrate([100,50,100,50,100]);
             const rect = miniSurprise.getBoundingClientRect();
-            createSparkles(rect.left + rect.width/2, rect.top);
+            createConfetti(rect.left+rect.width/2, rect.top);
         }
     });
 }
-
-// Floating hearts
-setInterval(() => {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.innerText = "❤️";
-    heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.bottom = "0px";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 5000);
-}, 500);
 </script>
 
 </body>
